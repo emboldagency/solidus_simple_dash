@@ -90,12 +90,12 @@ module Spree
     def best_selling_variants(limit = 5)
       line_items = Spree::LineItem.top_selling_by_variants.take(limit)
 
-      items = line_items.map do |li|
+      items = line_items.filter_map do |li|
         next if variant_discarded?(li[0])
 
         variant = find_variant(li[0])
         [variant.name, li[1]]
-      end.compact
+      end
 
       items.sort { |x, y| y[1] <=> x[1] }
     end
@@ -103,12 +103,12 @@ module Spree
     def top_grossing_variants(limit = 5)
       line_items = Spree::LineItem.top_grossing_by_variants.take(limit)
 
-      items = line_items.map do |li|
+      items = line_items.filter_map do |li|
         next if variant_discarded?(li[0])
 
         variant = find_variant(li[0])
         [variant.name, li[1]]
-      end.compact
+      end
 
       items.sort { |x, y| y[1] <=> x[1] }
     end
@@ -120,7 +120,7 @@ module Spree
     def last_orders(limit = 5)
       orders = Spree::Order.last_orders_by_line_items.take(limit)
 
-      orders.map do |o|
+      orders.filter_map do |o|
         next unless o.line_items
 
         qty = o.line_items.inject(0) do |sum, li|
@@ -128,19 +128,19 @@ module Spree
         end
 
         [o.email, qty, o.total]
-      end.compact
+      end
     end
 
     def biggest_spenders(limit = 5)
       spenders = Spree::Order.biggest_spenders.take(limit)
 
-      items = spenders.map do |o|
-        next unless user = Spree.user_class.find_by(id: o[0])
+      items = spenders.filter_map do |o|
+        next unless (user = Spree.user_class.find_by(id: o[0]))
 
         orders = user.orders
         qty = orders.size
-        [orders.first.email, qty, o[1]]
-      end.compact
+        [user.email, qty, o[1]]
+      end
 
       items.sort { |x, y| y[2] <=> x[2] }
     end
