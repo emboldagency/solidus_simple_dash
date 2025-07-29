@@ -9,10 +9,6 @@ AllCops:
     - spec/dummy/**/*
     - vendor/**/*
 
-Rails/SkipsModelValidations:
-  Exclude:
-    - db/migrate/**/*
-
 Gemspec/OrderedDependencies:
   Enabled: false
 
