@@ -13,7 +13,7 @@ module SolidusSimpleDash
         end
 
         base.scope :top_selling_by_taxons, -> do
-          joins(:order, variant: { product: :taxons })
+          joins(:order, variant: {product: :taxons})
             .where(order_complete_scope)
             .order(by_quantity_sum_scope.desc)
             .group("#{::Spree::Taxon.table_name}.name")
@@ -37,7 +37,7 @@ module SolidusSimpleDash
         end
 
         def base.order_complete_scope
-          ::Spree::Order.arel_table[:state].eq('complete')
+          ::Spree::Order.arel_table[:state].eq("complete")
         end
 
         def base.by_quantity_sum_scope

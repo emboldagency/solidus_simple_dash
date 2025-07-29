@@ -5,28 +5,28 @@ module Spree
     attr_accessor :to, :from, :name, :value
 
     DEFAULT_COLORS = [
-      '#0093DA',
-      '#FF3500',
-      '#92DB00',
-      '#1AB3FF',
-      '#FFB800'
+      "#0093DA",
+      "#FF3500",
+      "#92DB00",
+      "#1AB3FF",
+      "#FFB800"
     ].freeze
 
     def initialize(params)
       @to = params[:to]
       @from = params[:from]
       @name = params[:name]
-      @value = params[:value] || 'Count'
+      @value = params[:value] || "Count"
     end
 
-    def orders_by_day(type = 'orders')
-      if value == 'Count'
+    def orders_by_day(type = "orders")
+      if value == "Count"
         orders = Spree::Order.select(:created_at).where(conditions(type))
         orders = orders.group_by { |o| o.created_at.to_date }
         fill_empty_entries(orders)
 
         orders.keys.sort.map do |key|
-          [key.strftime('%Y-%m-%d'), orders[key].size]
+          [key.strftime("%Y-%m-%d"), orders[key].size]
         end
       else
         orders = Spree::Order.select([:created_at, :total]).where(conditions(type))
@@ -34,7 +34,7 @@ module Spree
         fill_empty_entries(orders)
 
         orders.keys.sort.map do |key|
-          [key.strftime('%Y-%m-%d'), orders[key].inject(0) do |_s, o|
+          [key.strftime("%Y-%m-%d"), orders[key].inject(0) do |_s, o|
             o.total
           end]
         end
@@ -57,17 +57,17 @@ module Spree
       abandoned_carts = Spree::Order.abandoned_carts.take(limit).size
       order_completed = Spree::Order.complete.take(limit).size
 
-      [[I18n.t('spree.simple_dash.abandoned_carts'), abandoned_carts],
-       [I18n.t('spree.simple_dash.completed_carts'), order_completed]]
+      [[I18n.t("spree.simple_dash.abandoned_carts"), abandoned_carts],
+        [I18n.t("spree.simple_dash.completed_carts"), order_completed]]
     end
 
     def new_users_by_day
-      users = Spree.user_class.select(:created_at).order('created_at ASC')
+      users = Spree.user_class.select(:created_at).order("created_at ASC")
       users = users.group_by { |u| u.created_at.to_date }
       fill_empty_entries(users)
 
       users.keys.sort.map do |key|
-        [key.strftime('%Y-%m-%d'), users[key].size]
+        [key.strftime("%Y-%m-%d"), users[key].size]
       end
     end
 
@@ -156,7 +156,7 @@ module Spree
     end
 
     def variant_discarded?(variant_id)
-      if Spree.solidus_gem_version >= Gem::Version.new('3')
+      if Spree.solidus_gem_version >= Gem::Version.new("3")
         Spree::Variant.with_discarded.find_by(id: variant_id).discarded?
       else
         Spree::Variant.discarded.find_by(id: variant_id).present?
@@ -172,31 +172,31 @@ module Spree
       end
     end
 
-    def conditions(type = 'orders')
+    def conditions(type = "orders")
       query = []
 
       query << if to
-                 Arel.sql(
-                   "#{Spree::Order.quoted_table_name}.completed_at >= '#{from}'
+        Arel.sql(
+          "#{Spree::Order.quoted_table_name}.completed_at >= '#{from}'
                    AND #{Spree::Order.quoted_table_name}.completed_at <= '#{to}'"
-                 )
-               else
-                 Arel.sql(
-                   "#{Spree::Order.quoted_table_name}.completed_at >= '#{from}'"
-                 )
-               end
+        )
+      else
+        Arel.sql(
+          "#{Spree::Order.quoted_table_name}.completed_at >= '#{from}'"
+        )
+      end
 
-      query << if type == 'abandoned_carts'
-                 Arel.sql(
-                   " AND #{Spree::Order.quoted_table_name}.state != 'complete'"
-                 )
-               end
+      query << if type == "abandoned_carts"
+        Arel.sql(
+          " AND #{Spree::Order.quoted_table_name}.state != 'complete'"
+        )
+      end
 
-      query << if type == 'orders'
-                 Arel.sql(
-                   " AND #{Spree::Order.quoted_table_name}.state = 'complete'"
-                 )
-               end
+      query << if type == "orders"
+        Arel.sql(
+          " AND #{Spree::Order.quoted_table_name}.state = 'complete'"
+        )
+      end
 
       query.join
     end

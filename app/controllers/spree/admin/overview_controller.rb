@@ -19,7 +19,7 @@ module Spree
         @abandoned_carts_products = LazyObject.new { overview.abandoned_carts_products }
 
         @orders_by_day = LazyObject.new { overview.orders_by_day }
-        @abandoned_carts_by_day = LazyObject.new { overview.orders_by_day('abandoned_carts') }
+        @abandoned_carts_by_day = LazyObject.new { overview.orders_by_day("abandoned_carts") }
         @new_users_by_day = LazyObject.new { overview.new_users_by_day }
         @orders_line_total = LazyObject.new { overview.orders_line_total }
         @orders_total = LazyObject.new { overview.orders_total }
@@ -34,29 +34,29 @@ module Spree
 
       def report_data
         values = case params[:report]
-                 when 'abandoned_carts'
-                   Array.new(
-                     overview.orders_by_day('abandoned_carts').map do |day|
-                       [day[0].to_s, day[1].to_s]
-                     end
-                   ).to_json
-                 when 'orders'
-                   Array.new(
-                     overview.orders_by_day.map do |day|
-                       [day[0].to_s, day[1].to_s]
-                     end
-                   ).to_json
-                 when 'new_users'
-                   Array.new(
-                     overview.new_users_by_day.map do |day|
-                       [day[0].to_s, day[1].to_s]
-                     end
-                   ).to_json
-                 when 'orders_totals'
-                   [orders_total: overview.orders_total.to_i,
-                    orders_line_total: overview.orders_line_total.to_i,
-                    orders_adjustment_total: overview.orders_adjustment_total.to_i].to_json
-                 end
+        when "abandoned_carts"
+          Array.new(
+            overview.orders_by_day("abandoned_carts").map do |day|
+              [day[0].to_s, day[1].to_s]
+            end
+          ).to_json
+        when "orders"
+          Array.new(
+            overview.orders_by_day.map do |day|
+              [day[0].to_s, day[1].to_s]
+            end
+          ).to_json
+        when "new_users"
+          Array.new(
+            overview.new_users_by_day.map do |day|
+              [day[0].to_s, day[1].to_s]
+            end
+          ).to_json
+        when "orders_totals"
+          [orders_total: overview.orders_total.to_i,
+           orders_line_total: overview.orders_line_total.to_i,
+           orders_adjustment_total: overview.orders_adjustment_total.to_i].to_json
+        end
 
         render js: values
       end
@@ -73,14 +73,14 @@ module Spree
 
       def set_date
         params.merge!({
-          from: (Time.zone.now.to_date - 1.week).strftime('%Y-%m-%d'),
-          value: 'Count'
+          from: (Time.zone.now.to_date - 1.week).strftime("%Y-%m-%d"),
+          value: "Count"
         })
       end
 
       def value
         params.merge!({
-          value: params[:value] || 'Count'
+          value: params[:value] || "Count"
         })
       end
 
@@ -89,22 +89,22 @@ module Spree
         to = Date.new(Time.zone.now.year, Time.zone.now.month, -1)
 
         dates = case params[:name]
-                when '7_days'
-                  { from: (Time.zone.now.to_date - 1.week).strftime('%Y-%m-%d') }
-                when '14_days'
-                  { from: (Time.zone.now.to_date - 2.weeks).strftime('%Y-%m-%d') }
-                when 'this_month'
-                  { from: from.strftime('%Y-%m-%d'),
-                    to: to.strftime('%Y-%m-%d') }
-                when 'last_month'
-                  { from: (from - 1.month).strftime('%Y-%m-%d'),
-                    to: (to - 1.month).strftime('%Y-%m-%d') }
-                when 'this_year'
-                  { from: Date.new(Time.zone.now.year, 1, 1).strftime('%Y-%m-%d') }
-                when 'last_year'
-                  { from: Date.new(Time.zone.now.year - 1, 1, 1).strftime('%Y-%m-%d'),
-                    to: Date.new(Time.zone.now.year - 1, 12, -1).strftime('%Y-%m-%d') }
-                end
+        when "7_days"
+          {from: (Time.zone.now.to_date - 1.week).strftime("%Y-%m-%d")}
+        when "14_days"
+          {from: (Time.zone.now.to_date - 2.weeks).strftime("%Y-%m-%d")}
+        when "this_month"
+          {from: from.strftime("%Y-%m-%d"),
+           to: to.strftime("%Y-%m-%d")}
+        when "last_month"
+          {from: (from - 1.month).strftime("%Y-%m-%d"),
+           to: (to - 1.month).strftime("%Y-%m-%d")}
+        when "this_year"
+          {from: Date.new(Time.zone.now.year, 1, 1).strftime("%Y-%m-%d")}
+        when "last_year"
+          {from: Date.new(Time.zone.now.year - 1, 1, 1).strftime("%Y-%m-%d"),
+           to: Date.new(Time.zone.now.year - 1, 12, -1).strftime("%Y-%m-%d")}
+        end
 
         params.merge!(dates)
       end
