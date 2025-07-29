@@ -22,9 +22,9 @@ module SolidusSimpleDash
     config.to_prepare do
       ::Spree::Backend::Config.configure do |config|
         config.menu_items << config.class::MenuItem.new(
-          [:overview],
-          'bar-chart',
           label: 'overview',
+          icon: 'bar-chart',
+          url: :admin_overview_path,
           condition: -> { can?(:manage, ::Spree::Overview) }
         )
       end
