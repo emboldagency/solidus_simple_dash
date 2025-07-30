@@ -1,7 +1,8 @@
 # SolidusSimpleDash
 
-[![release.yml](https://embold.net/api/github/badge/workflow-status.php?repo=solidus_simple_dash&workflow=release.yml)](https://github.com/emboldagency/solidus_simple_dash/actions/workflows/release.yml) [![ci.yml](https://embold.net/api/github/badge/workflow-status.php?repo=solidus_simple_dash&workflow=ci.yml)](https://github.com/emboldagency/solidus_simple_dash/actions/workflows/ci.yml) <!--
--->![Semantic Versioning](https://embold.net/api/github/badge/semver.php?repo=solidus_simple_dash)
+![Semantic Versioning](https://embold.net/api/github/badge/semver.php?repo=solidus_simple_dash) <!--
+--> [![release.yml](https://embold.net/api/github/badge/workflow-status.php?repo=solidus_simple_dash&workflow=release.yml)](https://github.com/emboldagency/solidus_simple_dash/actions/workflows/release.yml) <!--
+--> [![ci.yml](https://embold.net/api/github/badge/workflow-status.php?repo=solidus_simple_dash&workflow=ci.yml)](https://github.com/emboldagency/solidus_simple_dash/actions/workflows/ci.yml)
 
 Add simple dashboard to review your sales based on variants, products and orders, it contains:
 - Best selling products
