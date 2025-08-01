@@ -21,12 +21,24 @@ module SolidusSimpleDash
 
     config.to_prepare do
       ::Spree::Backend::Config.configure do |config|
-        config.menu_items << config.class::MenuItem.new(
-          label: "overview",
-          icon: "bar-chart",
-          url: :admin_overview_path,
-          condition: -> { can?(:manage, ::Spree::Overview) }
-        )
+        # Solidus 4.0 and later use a different way to define menu items
+        if Gem::Version.new(Spree.solidus_version) >= Gem::Version.new('4.0')
+          new_item = config.class::MenuItem.new(
+            label: "overview",
+            icon: "bar-chart",
+            url: :admin_overview_path,
+            condition: -> { can?(:manage, ::Spree::Overview) }
+          )
+        else
+          OVERVIEW_TABS ||= [:overview].freeze
+          new_item = config.class::MenuItem.new(
+            OVERVIEW_TABS,
+            "bar-chart",
+            { url: :admin_overview_path, condition: -> { can?(:manage, ::Spree::Overview) } }
+          )
+        end
+
+        config.menu_items << new_item
       end
     end
   end
