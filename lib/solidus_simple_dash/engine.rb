@@ -30,11 +30,11 @@ module SolidusSimpleDash
             condition: -> { can?(:manage, ::Spree::Overview) }
           )
         else
-          OVERVIEW_TABS ||= [:overview].freeze
           new_item = config.class::MenuItem.new(
-            OVERVIEW_TABS,
-            "bar-chart",
-            { url: :admin_overview_path, condition: -> { can?(:manage, ::Spree::Overview) } }
+            [:overview],
+            'bar-chart',
+            label: 'overview',
+            condition: -> { can?(:manage, ::Spree::Overview) }
           )
         end
 
