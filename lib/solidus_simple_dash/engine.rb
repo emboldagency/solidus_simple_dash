@@ -22,7 +22,7 @@ module SolidusSimpleDash
     config.to_prepare do
       ::Spree::Backend::Config.configure do |config|
         # Solidus 4.0 and later use a different way to define menu items
-        if Gem::Version.new(::Spree.solidus_version) >= Gem::Version.new('4.0')
+        if Gem::Version.new(::Spree.solidus_version) >= Gem::Version.new("4.2")
           new_item = config.class::MenuItem.new(
             label: "overview",
             icon: "bar-chart",
